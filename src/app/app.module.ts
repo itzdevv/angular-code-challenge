@@ -3,15 +3,19 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import {FormsModule} from "@angular/forms";
+import {SignaturePadModule} from "angular2-signaturepad";
 
 @NgModule({
   declarations: [
     AppComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule
-  ],
+    imports: [
+      BrowserModule,
+      AppRoutingModule,
+      FormsModule,
+      SignaturePadModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })
