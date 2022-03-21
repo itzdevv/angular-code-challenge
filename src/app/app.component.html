@@ -1,41 +1,46 @@
 <div class="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-  <div class="max-w-md w-full space-y-8">
-    <ng-container *ngIf="step == 0">
-      <div>
-        <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Welcome</h2>
-      </div>
-      <div class="mt-8 space-y-6">
-        <div class="relative">
-          <label for="on-error-email" class="text-gray-700">
-            Enter your email
-            <span class="text-red-500 required-dot">
+  <div class="max-w-xl w-full space-y-8">
+    <ng-container [ngSwitch]="step">
+      <ng-template ngSwitchDefault>
+        <div>
+          <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Welcome</h2>
+        </div>
+        <div class="mt-8 space-y-6">
+          <div class="relative">
+            <label for="on-error-email" class="text-gray-700">
+              Enter your email
+              <span class="text-red-500 required-dot">
             *
         </span>
-          </label>
-          <input [(ngModel)]="email" type="text" id="on-error-email" class="{{isSubmitted && !email ? 'ring-red-500':''}} ring-2 rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" name="email" placeholder="Your email"/>
-          <ng-container *ngIf="isSubmitted && !email">
-            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="absolute text-red-500 right-2 bottom-3" viewBox="0 0 1792 1792">
-              <path d="M1024 1375v-190q0-14-9.5-23.5t-22.5-9.5h-192q-13 0-22.5 9.5t-9.5 23.5v190q0 14 9.5 23.5t22.5 9.5h192q13 0 22.5-9.5t9.5-23.5zm-2-374l18-459q0-12-10-19-13-11-24-11h-220q-11 0-24 11-10 7-10 21l17 457q0 10 10 16.5t24 6.5h185q14 0 23.5-6.5t10.5-16.5zm-14-934l768 1408q35 63-2 126-17 29-46.5 46t-63.5 17h-1536q-34 0-63.5-17t-46.5-46q-37-63-2-126l768-1408q17-31 47-49t65-18 65 18 47 49z">
-              </path>
-            </svg>
-            <p class="absolute text-sm text-red-500 -bottom-6">
-              Email is invalid
-            </p>
-          </ng-container>
-        </div>
-        <div class="relative py-2 signature_pad {{isSubmitted && signaturePad?.isEmpty() ? 'border-red': ''}}">
-          <signature-pad [options]="signaturePadOptions"></signature-pad>
-          <ng-container *ngIf="isSubmitted && signaturePad.isEmpty()">
-            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="absolute text-red-500 right-2 bottom-3" viewBox="0 0 1792 1792">
-              <path d="M1024 1375v-190q0-14-9.5-23.5t-22.5-9.5h-192q-13 0-22.5 9.5t-9.5 23.5v190q0 14 9.5 23.5t22.5 9.5h192q13 0 22.5-9.5t9.5-23.5zm-2-374l18-459q0-12-10-19-13-11-24-11h-220q-11 0-24 11-10 7-10 21l17 457q0 10 10 16.5t24 6.5h185q14 0 23.5-6.5t10.5-16.5zm-14-934l768 1408q35 63-2 126-17 29-46.5 46t-63.5 17h-1536q-34 0-63.5-17t-46.5-46q-37-63-2-126l768-1408q17-31 47-49t65-18 65 18 47 49z">
-              </path>
-            </svg>
-          </ng-container>
-          <button class="absolute text-red-500 right-2 top-3" *ngIf="signaturePad && !signaturePad.isEmpty()" (click)="onUndo()">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 1792 1792">
-              <g transform="translate(0.000000,1226.000000) scale(0.100000,-0.100000)"
-                 fill="#000000" stroke="none">
-                <path d="M5485 11778 c-302 -265 -802 -703 -1110 -973 -308 -270 -1124 -985
+            </label>
+            <input [(ngModel)]="email" type="text" id="on-error-email" class="{{isSubmitted && !email ? 'ring-red-500':''}} ring-2 rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" name="email" placeholder="Your email"/>
+            <ng-container *ngIf="isSubmitted && !email">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="absolute text-red-500 right-2 bottom-3" viewBox="0 0 1792 1792">
+                <path d="M1024 1375v-190q0-14-9.5-23.5t-22.5-9.5h-192q-13 0-22.5 9.5t-9.5 23.5v190q0 14 9.5 23.5t22.5 9.5h192q13 0 22.5-9.5t9.5-23.5zm-2-374l18-459q0-12-10-19-13-11-24-11h-220q-11 0-24 11-10 7-10 21l17 457q0 10 10 16.5t24 6.5h185q14 0 23.5-6.5t10.5-16.5zm-14-934l768 1408q35 63-2 126-17 29-46.5 46t-63.5 17h-1536q-34 0-63.5-17t-46.5-46q-37-63-2-126l768-1408q17-31 47-49t65-18 65 18 47 49z">
+                </path>
+              </svg>
+              <p class="absolute text-sm text-red-500 -bottom-6">
+                Email is invalid
+              </p>
+            </ng-container>
+          </div>
+          <div>
+            <label for="on-error-email" class="text-gray-700">
+              Draw your avatar
+            </label>
+            <div class="relative signature_pad {{isSubmitted && signaturePad?.isEmpty() ? 'border-red': ''}}">
+              <signature-pad [options]="signaturePadOptions"></signature-pad>
+              <ng-container *ngIf="isSubmitted && signaturePad.isEmpty()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="absolute text-red-500 right-2 bottom-3" viewBox="0 0 1792 1792">
+                  <path d="M1024 1375v-190q0-14-9.5-23.5t-22.5-9.5h-192q-13 0-22.5 9.5t-9.5 23.5v190q0 14 9.5 23.5t22.5 9.5h192q13 0 22.5-9.5t9.5-23.5zm-2-374l18-459q0-12-10-19-13-11-24-11h-220q-11 0-24 11-10 7-10 21l17 457q0 10 10 16.5t24 6.5h185q14 0 23.5-6.5t10.5-16.5zm-14-934l768 1408q35 63-2 126-17 29-46.5 46t-63.5 17h-1536q-34 0-63.5-17t-46.5-46q-37-63-2-126l768-1408q17-31 47-49t65-18 65 18 47 49z">
+                  </path>
+                </svg>
+              </ng-container>
+              <button class="absolute text-red-500 right-2 top-3" *ngIf="!isLoadingView && signaturePad && !signaturePad.isEmpty()" (click)="onUndo()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 1792 1792">
+                  <g transform="translate(0.000000,1226.000000) scale(0.100000,-0.100000)"
+                     fill="#000000" stroke="none">
+                    <path d="M5485 11778 c-302 -265 -802 -703 -1110 -973 -308 -270 -1124 -985
 -1814 -1589 -1005 -881 -1251 -1101 -1239 -1110 8 -6 900 -825 1983 -1821
 1083 -995 2181 -2005 2440 -2242 258 -238 472 -433 475 -433 3 0 4 633 2 1407
 -1 774 1 1410 5 1414 11 11 327 -8 458 -27 848 -122 1536 -568 1913 -1239 120
@@ -52,28 +57,45 @@ c-48 -39 14 -2 159 95 145 98 332 242 435 336 l58 54 230 3 c224 2 230 3 261
 -1753 1013 -2780 1057 l-160 7 -3 1288 -2 1287 -93 0 -92 0 -550 -482z m2825
 -9571 c0 -2 -19 -21 -42 -42 l-43 -40 40 43 c36 39 45 47 45 39z m730 -1 c0
 -2 -8 -10 -17 -17 -16 -13 -17 -12 -4 4 13 16 21 21 21 13z"/>
-                <path d="M9068 2084 c-32 -25 -58 -48 -58 -50 0 -3 27 16 60 41 52 40 68 55
+                    <path d="M9068 2084 c-32 -25 -58 -48 -58 -50 0 -3 27 16 60 41 52 40 68 55
 58 55 -2 0 -29 -21 -60 -46z"/>
-                <path d="M7669 2023 c-13 -16 -12 -17 4 -4 16 13 21 21 13 21 -2 0 -10 -8 -17
+                    <path d="M7669 2023 c-13 -16 -12 -17 4 -4 16 13 21 21 13 21 -2 0 -10 -8 -17
 -17z"/>
-              </g>
-            </svg>
+                  </g>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div>
+            <button class=" px-6 py-2  transition ease-in duration-200 uppercase rounded-full hover:bg-gray-800 hover:text-white border-2 border-gray-900 focus:outline-none" (click)="onSubmit()">
+              Next
+            </button>
+          </div>
+        </div>
+      </ng-template>
+      <ng-template ngSwitchCase="1">
+        <h6 class="mt-6 text-center text-3xl font-extrabold text-gray-700">Table run for {{email}}</h6>
+        <div class="flex items-center">
+
+          <button class="w-full mr-2 px-4 py-2 transition ease-in duration-200 uppercase rounded-full hover:bg-gray-800 hover:text-white border-2 border-gray-900 focus:outline-none" (click)="onNextItem()">
+            Next Step
+          </button>
+          <button class="w-full ml-2 px-4 py-2 transition ease-in duration-200 uppercase rounded-full hover:bg-gray-800 hover:text-white border-2 border-gray-900 focus:outline-none">
+            Autorun
           </button>
         </div>
-        <div>
-          <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" (click)="onNext()">Next</button>
-        </div>
-      </div>
-    </ng-container>
-    <ng-container *ngIf="step == 1">
-      <div class="container grid"></div>
+        <div class="min-w-md">
 
-      <div class="min-w-md">
-        <table class="table p-4 bg-white shadow rounded-lg flex items-center justify-center py-12">
-          <tbody class="table-body"></tbody>
-        </table>
-      </div>
+          <table class="table p-4 bg-white shadow rounded-lg flex items-center justify-center py-12">
+            <tbody class="table-body"></tbody>
+          </table>
+        </div>
+        <button class="w-full ml-2 px-4 py-2 transition ease-in duration-200 uppercase rounded-full hover:bg-gray-800 hover:text-white border-2 border-gray-900 focus:outline-none" (click)="step = 0">
+          back
+        </button>
+      </ng-template>
     </ng-container>
+
   </div>
 </div>
 <router-outlet></router-outlet>

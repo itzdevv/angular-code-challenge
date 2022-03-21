@@ -9,15 +9,13 @@ import {SignaturePad} from "angular2-signaturepad";
 export class AppComponent {
   // @ts-ignore
   @ViewChild(SignaturePad) signaturePad: SignaturePad;
-  email = ''; isSubmitted = false;
+  isLoadingView = true; email = ''; isSubmitted = false;
   signaturePadOptions: Object = {
     minWidth: 5,
     dotSize: .5,
-    canvasWidth: window.innerWidth/2 - 48,
+    canvasWidth: window.innerWidth/1.65,
     canvasHeight: 300
   }; step = 0;
-  rows = [0,1,2,3,4,5,6,7,8,9];
-  cols = [0,1,2,3,4,5,6,7,8,9];
   keys = {
     left: 37,
     up: 38,
@@ -27,66 +25,15 @@ export class AppComponent {
   container: any;
   gridNodes: Iterable<unknown> | ArrayLike<unknown> | undefined;
   gridArray: unknown[] | undefined;
-  imageCanv: string | undefined;
-  circle: HTMLDivElement | undefined;
-  position = {x: 0, y: 0};
-  firstGridItem: any; gridItem: any;
+  imageCanvas: HTMLImageElement | undefined;
+  gridItem: any;
+  x = 0; y = 0; r = 10; c = 10;
+  disabledItems = ['02','22','20','31','32','33','34','41','88','98'];
   constructor() {
   }
-  makeTable(rows: number, cols: number) {
-    let x = 0;
-    for (let r = 0; r < rows; r++) {
-      let tr = document.createElement("tr");
-      tr.className = 'text-gray-700';
-      let y = 0;
-      for (let c = 0; c < cols; c++) {
-        let td = document.createElement("td")
-        td.innerHTML = '[' + x + '' + y + ']';
-        tr.appendChild(td).className = 'border p-4 dark:border-dark-5 table_tr table_tr_' + x + '' + y;
-        y++;
-      }
-      this.container.appendChild(tr);
-      x++;
-    }
-  }
-  makeGrid(rows: number, cols: number) {
-    this.container.style.setProperty("--grid-rows", rows);
-    this.container.style.setProperty("--grid-cols", cols);
-    let x = 0;
-    let y = 0;
-    for (let c = 0; c < rows * cols; c++) {
-      let cell = document.createElement("div");
-      y = c%cols;
-      if (y === (rows - 1)) {
-        x++;
-      }
-      this.container.appendChild(cell).className = "grid-item grid-item-" + x + '' + y;
-    }
-  }
-  moveRight(e: any) {
-    console.log(this.gridArray);
-  }
-  handleKey(e: any) {
-    switch (e.keyCode) {
-      case this.keys.left:
-        this.position.y--;
-        break;
-      case this.keys.up:
-        this.position.x--;
-        break;
 
-      case this.keys.right:
-        this.position.y++;
-        break;
-
-      case this.keys.down:
-        this.position.x++;
-        break;
-    }
-    this.gridItem = document.querySelector(".grid-item-" + this.position.x + '' + this.position.y);
-    this.gridItem.appendChild(this.circle);
-  }
   ngAfterViewInit() {
+    this.isLoadingView = false;
     this.signaturePad.set('minWidth', 5);
     this.signaturePad.clear();
   }
@@ -97,30 +44,116 @@ export class AppComponent {
       this.signaturePad.fromData(data);
     }
   }
-  onNext() {
+  onSubmit() {
     this.isSubmitted = true;
     this.signaturePad.isEmpty();
     if (this.email && !this.signaturePad.isEmpty()) {
+      this.imageCanvas = document.createElement('img');
+      this.imageCanvas.src = this.signaturePad.toDataURL();
+      this.imageCanvas.style.width = '100%';
+      this.imageCanvas.style.height = '100%';
       this.step = 1;
-
       setTimeout(() => {
         this.container = document.querySelector('.table-body');
         this.gridNodes = document.querySelectorAll(".table-tr");
         this.gridArray = Array.from(this.gridNodes);
-        this.makeTable(10, 10);
-        this.imageCanv = document.createElement('img').src = '';
-
-
-
-        this.circle = document.createElement("div");
-        this.circle.style.width = "20px";
-        this.circle.style.height = "20px";
-        this.circle.style.backgroundColor = "#000";
-        this.firstGridItem = document.querySelector(".grid-item");
-        console.log('sdsds', this.firstGridItem)
-        this.firstGridItem.appendChild(this.circle);
+        this.makeTable(this.r, this.c);
         window.addEventListener("keydown", (e) => this.handleKey(e));
-      }, 100)
+      }, 200)
+    }
+  }
+  makeTable(rows: number, cols: number) {
+    let x = 0;
+    for (let r = 0; r < rows; r++) {
+      let tr = document.createElement("tr");
+      tr.className = 'text-gray-700';
+      let y = 0;
+      for (let c = 0; c < cols; c++) {
+        let td = document.createElement("td")
+        // td.innerHTML = '[' + x + '' + y + ']';
+        if (x === 0 && y === 0) {
+          try {
+            // @ts-ignore
+            td.appendChild(this.imageCanvas)
+            td.style.backgroundColor = '#f6b36e'
+          } catch (e) {}
+        }
+        if (x === this.r - 1 && y === this.c - 1) {
+          td.style.backgroundColor = '#62c452';
+        }
+        if (this.disabledItems.includes(x + '' + y)) {
+          td.style.backgroundColor = 'rgb(68,67,67)';
+        }
+        tr.appendChild(td).className = 'border p-1 dark:border-dark-5 table-tr table-tr-' + x + '' + y;
+        y++;
+      }
+      this.container.appendChild(tr);
+      x++;
+    }
+  }
+  handleKey(e: any) {
+    try {
+      // @ts-ignore
+      document.querySelector(".table-tr-" + this.x + '' + this.y).style.backgroundColor = '#FFFFFFFF';
+    } catch (e) {}
+    switch (e.keyCode) {
+      case this.keys.left:
+        if (this.y > 0) {
+          this.disabledItems.push(this.x+''+this.y);
+          this.y--;
+        }
+        break;
+      case this.keys.up:
+        if (this.x > 0) {
+          this.disabledItems.push(this.x+''+this.y);
+          this.x--;
+        }
+        break;
+      case this.keys.right:
+        if (this.y < this.c - 1) {
+          this.y++;
+        }
+        break;
+
+      case this.keys.down:
+        if (this.x < this.r -1) {
+          this.x++;
+        }
+        break;
+    }
+    console.log('disabledItems', this.disabledItems);
+    this.gridItem = document.querySelector(".table-tr-" + this.x + '' + this.y);
+    this.gridItem.style.backgroundColor = '#f6b36e'
+    this.gridItem.appendChild(this.imageCanvas);
+    if (this.x === this.r - 1 && this.y === this.c - 1) {
+      alert('Destination reached!');
+    }
+  }
+  onNextItem() {
+    let moveDown = '';
+    let moveRight = '';
+    let moveUp = '';
+    let moveLeft = '';
+    if (this.x < this.r -1) {
+      moveDown = (this.x + 1) + '' + this.y;
+    }
+    if (this.y < this.c - 1) {
+      moveRight = this.x + '' + (this.y + 1);
+    }
+    if (this.x > 0) {
+      moveUp = (this.x - 1) + '' + this.y;
+    }
+    if (this.y > 0) {
+      moveLeft = this.x + '' + (this.y - 1);
+    }
+    if (!this.disabledItems.includes(moveDown) && moveDown) {
+      this.handleKey({keyCode: this.keys.down})
+    } else if (!this.disabledItems.includes(moveRight) && moveRight) {
+      this.handleKey({keyCode: this.keys.right})
+    } else if (!this.disabledItems.includes(moveUp) && moveUp) {
+      this.handleKey({keyCode: this.keys.up})
+    } else if (!this.disabledItems.includes(moveLeft) && moveLeft) {
+      this.handleKey({keyCode: this.keys.left})
     }
   }
 }
