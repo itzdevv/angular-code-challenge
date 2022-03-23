@@ -1,3 +1,4 @@
+
 <div class="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
   <div class="max-w-xl w-full space-y-8">
     <ng-container [ngSwitch]="step">
@@ -74,13 +75,24 @@ c-48 -39 14 -2 159 95 145 98 332 242 435 336 l58 54 230 3 c224 2 230 3 261
         </div>
       </ng-template>
       <ng-template ngSwitchCase="1">
+        <div class="alert_div text-white px-6 py-4 border-0 rounded relative mb-4 bg-red-500" *ngIf="!canMove">
+  <span class="text-xl inline-block mr-5 align-middle">
+    <i class="fas fa-bell"></i>
+  </span>
+          <span class="inline-block align-middle mr-8">
+    <b class="capitalize">Alert!</b> Out of moves!!!
+  </span>
+          <button class="absolute bg-transparent text-2xl font-semibold leading-none right-0 top-0 mt-4 mr-6 outline-none focus:outline-none" (click)="hideAlert()">
+            <span>×</span>
+          </button>
+        </div>
         <h6 class="mt-6 text-center text-3xl font-extrabold text-gray-700">Table run for {{email}}</h6>
         <div class="flex items-center">
 
-          <button class="w-full mr-2 px-4 py-2 transition ease-in duration-200 uppercase rounded-full hover:bg-gray-800 hover:text-white border-2 border-gray-900 focus:outline-none" (click)="onNextItem()">
+          <button [disabled]="!canMove" class="w-full mr-2 px-4 py-2 transition ease-in duration-200 uppercase rounded-full hover:bg-gray-800 hover:text-white border-2 border-gray-900 focus:outline-none" (click)="onNextItem()">
             Next Step
           </button>
-          <button class="w-full ml-2 px-4 py-2 transition ease-in duration-200 uppercase rounded-full hover:bg-gray-800 hover:text-white border-2 border-gray-900 focus:outline-none">
+          <button [disabled]="!canMove" class="w-full ml-2 px-4 py-2 transition ease-in duration-200 uppercase rounded-full hover:bg-gray-800 hover:text-white border-2 border-gray-900 focus:outline-none" (click)="autoRun()">
             Autorun
           </button>
         </div>
@@ -90,12 +102,8 @@ c-48 -39 14 -2 159 95 145 98 332 242 435 336 l58 54 230 3 c224 2 230 3 261
             <tbody class="table-body"></tbody>
           </table>
         </div>
-        <button class="w-full ml-2 px-4 py-2 transition ease-in duration-200 uppercase rounded-full hover:bg-gray-800 hover:text-white border-2 border-gray-900 focus:outline-none" (click)="step = 0">
-          back
-        </button>
       </ng-template>
     </ng-container>
-
   </div>
 </div>
 <router-outlet></router-outlet>
